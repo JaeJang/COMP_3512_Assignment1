@@ -1,6 +1,11 @@
 #include "Matrix.hpp"
 #include "SizeException.hpp"
 
+Matrix::Matrix(const int rowAndCol) 
+	:row(rowAndCol), col(rowAndCol)
+{
+}
+
 Matrix::Matrix(const int _row,const int _col)
 	:row(_row), col(_col)
 {

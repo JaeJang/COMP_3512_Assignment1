@@ -9,6 +9,7 @@ private:
 
 public:
 	
+	explicit Matrix(const int rowAndCol);
 	Matrix(const int _row, const int _col);
 	Matrix(const Matrix & rhs);
 	~Matrix();
