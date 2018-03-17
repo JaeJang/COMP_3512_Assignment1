@@ -5,28 +5,22 @@
 #include <string>
 #include <sstream>
 #include <vector>
-
+#include <stack>
 using namespace std;
 
 Matrix * readFile(Matrix *, vector<double>*);
-Matrix getResult(const Matrix & rank, const Matrix & M);
+void getResult( Matrix & rank, const Matrix & M);
 
 int main() {
-
 	constexpr double P = 0.85;
 
 	Matrix *inputMatrix = nullptr;
 	vector<double> sumOfCols;
-	inputMatrix = readFile(inputMatrix, &sumOfCols);
-	
-	
 	
 	Matrix S = inputMatrix->calculateImportance(sumOfCols);
 	Matrix Q = inputMatrix->getQMatrix();
-	cout << S << endl << endl;
 
 	Matrix M = P * S + (1 - P) * Q;
-	cout << M << endl << endl;
 
 	Matrix rank(inputMatrix->getCol(), 1);
 	for (int i = 0; i < rank.getRow(); ++i) {
@@ -37,35 +31,19 @@ int main() {
 	
 		
 	rank = M * rank;
-	rank = getResult(rank, M);
-	cout << rank << endl << endl;
+	getResult(rank, M);
 	double sum = 0;
 	for (int i = 0; i < rank.getRow() * rank.getCol(); ++i) {
 		sum += rank.getValue(i);
 	}
-	cout << sum << endl << endl;
 	rank /= sum;
 
-	cout << rank << endl;
+	cout << "PageRank:" << endl << rank << endl;
 
-	//Matrix a(4, 4);
-	//double element = 0.2;
-	//for (int i = 0; i < 4 ; ++i) {
-	//	for(int j = 0; j < 4; ++j) {
-	//	a.setValue(i,j, element);
-
-	//	}
-	//	element += 0.2;
-	//}
-	//cout << a << endl;
-	//Matrix b(4, 1);
-	//for (int i = 0; i < 4 ; ++i) {
-	//	b.setValue(i, 1);
-	//}
-	//Matrix c = a * b;
-	////c = c + b;
-	//cout << c << endl;
-
+	
+	ofstream out("PageRank.txt");
+	out << rank;
+	out.close();
 
 	cout << "Press any button to exit";
 	_getche();
@@ -112,6 +90,11 @@ Matrix * readFile(Matrix * matrix, vector<double> * sumOfCols) {
 	return matrix;
 }
 
-void getResult(const Matrix & rank, const Matrix & M) {
-
+void getResult( Matrix & rank, const Matrix & M) 
+{
+	Matrix preRank(rank.getRow(), rank.getCol());
+	while (preRank != rank) {
+		preRank = rank;
+		rank = M * rank;
+	}
 }

@@ -122,7 +122,6 @@ Matrix & Matrix::operator/=(const double factor)
 	Matrix operator*(Matrix lhs, const Matrix & rhs)
 	{
 		lhs *= rhs;
-		std::cout << lhs << std::endl;
 		return lhs;
 	}
 
@@ -140,6 +139,25 @@ Matrix operator*(const double factor, Matrix lhs)
 {
 	lhs = operator*(lhs, factor);
 	return lhs;
+}
+
+bool operator==(const Matrix & lhs, const Matrix & rhs) 
+{
+	if ((lhs.row != rhs.row) || (lhs.col != rhs.col))
+		return false;
+	for (int i = 0; i < lhs.row; ++i) {
+		for (int j = 0; j < lhs.col; ++j) {
+			double left = lhs.matrix[i * lhs.col + j];
+			double right = rhs.matrix[i * rhs.col + j];
+			if (left != right)
+				return false;
+		}
+	}
+	return true;
+}
+bool operator!=(const Matrix & lhs, const Matrix & rhs) 
+{
+	return !operator==(lhs, rhs);
 }
 
 void swap(Matrix & rhs, Matrix & lhs)

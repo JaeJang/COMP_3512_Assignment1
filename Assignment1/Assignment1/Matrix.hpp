@@ -25,10 +25,13 @@ public:
 	friend Matrix operator*(Matrix lhs, const Matrix & rhs);
 	friend Matrix operator*(Matrix lhs, const double factor);
 	friend Matrix operator*(const double factor, Matrix lhs);
+	friend bool operator==(const Matrix & lhs, const Matrix & rhs);
+	friend bool operator!=(const Matrix & lhs, const Matrix & rhs);
 	friend void swap(Matrix & rhs, Matrix & lhs);
 	Matrix & operator=(Matrix rhs);
 	Matrix & operator*=(const Matrix & rhs);
 	friend std::ostream& operator<<(std::ostream & out, Matrix & obj);
+	friend std::istream& operator>>(std::istream & in, Matrix & obj);
 
 	int getRow() const { return row; }
 	int getCol() const { return col; }
