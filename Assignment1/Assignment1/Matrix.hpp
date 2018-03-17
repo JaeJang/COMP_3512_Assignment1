@@ -30,5 +30,6 @@ public:
 	int getCol() const { return col; }
 	double* getMatrix() const { return matrix; }
 	void setValue(int _row, int _col, double value);
+	void setValue(int index, double value);
 	
 };

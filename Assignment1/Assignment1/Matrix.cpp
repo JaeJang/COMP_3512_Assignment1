@@ -4,6 +4,8 @@
 Matrix::Matrix(const int rowAndCol) 
 	:row(rowAndCol), col(rowAndCol)
 {
+	matrix = new double[row * col];
+	clear();
 }
 
 Matrix::Matrix(const int _row,const int _col)
@@ -166,4 +168,9 @@ void Matrix::setValue(int _row, int _col, double value)
 		throw SizeException{};
 	}
 	matrix[_row * col + _col] = value;
+}
+
+void Matrix::setValue(int index, double value)
+{
+	matrix[index] = value;
 }
