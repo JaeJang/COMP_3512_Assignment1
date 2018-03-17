@@ -119,6 +119,7 @@
     <ClInclude Include="SizeException.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="funtions.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Matrix.cpp" />
   </ItemGroup>

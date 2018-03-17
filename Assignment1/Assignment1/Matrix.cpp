@@ -1,6 +1,15 @@
 #include "Matrix.hpp"
 #include "SizeException.hpp"
+#include <iomanip>
+#include <iostream>
+//#include <vector>
 
+
+Matrix::Matrix() {
+	row = 0;
+	col = 0;
+	matrix = nullptr;
+}
 Matrix::Matrix(const int rowAndCol) 
 	:row(rowAndCol), col(rowAndCol)
 {
@@ -63,68 +72,59 @@ Matrix operator-(Matrix lhs, const Matrix & rhs)
 	return lhs;
 }
 
-//Matrix operator/(Matrix lhs, const Matrix & rhs)
-//{
-//	return Matrix();
-//}
 
 Matrix operator/(Matrix lhs, const double factor)
 {
-	for (int i = 0; i < lhs.row; ++i) {
-		for (int j = 0; j < lhs.col; ++j) {
-			lhs.matrix[i * lhs.col + j] /= factor;
-		}
-	}
+	
+	lhs /= factor;
 	return lhs;
 }
 
-Matrix & Matrix::operator*=(const Matrix & rhs) {
-	if (col != rhs.row) {
-		throw SizeException{};
-	}
-	Matrix temp(*this);
-	col = rhs.col;
-	delete[] matrix;
-	matrix = new double[row * col];
-	clear();
-	int i, j, k;
-	for (i = 0; i < row; ++i) {
-		for (j = 0; j < col; ++j) {
-			for (k = 0; k < temp.col; ++k) {
-				matrix[i * col + j] =
-				matrix[i * col + j] +
-				(temp.matrix[i * temp.col + k] * rhs.matrix[k * rhs.col + j]);
+Matrix & Matrix::operator/=(const double factor) 
+{
+	
 
-			}
+	for (int i = 0; i < row; ++i) {
+		for (int j = 0; j < col; ++j) {
+			matrix[i * col + j] /= factor;
 		}
 	}
 	return *this;
 }
 
+	Matrix & Matrix::operator*=(const Matrix & rhs) {
+		if (col != rhs.row) {
+			throw SizeException{};
+		}
+		Matrix temp(*this);
+		col = rhs.col;
+		delete[] matrix;
+		matrix = new double[row * col];
+		
+		clear();
+		int i, j, k;
+		for (i = 0; i < row; ++i) {
+			for (j = 0; j < col; ++j) {
+				for (k = 0; k < temp.col; ++k) {
+					double left = temp.matrix[i * temp.col + k];
+					matrix[i * col + j] +=
+					//matrix[i * col + j] +
+					(temp.matrix[i * temp.col + k] * rhs.matrix[k * rhs.col + j]);
 
-Matrix operator*(Matrix lhs, const Matrix & rhs)
-{
-	//if (lhs.col != rhs.row) {
-	//	throw SizeException{};
-	//}
-	//Matrix result(lhs);
-	//lhs.col = rhs.col;
-	//lhs.matrix = new double[lhs.row * lhs.col];
-	//lhs.clear();
-	//for (int i = 0; i < result.row; ++i) {
-	//	for (int j = 0; j < result.col; ++j) {
-	//			for (int k = 0; k < lhs.col; ++k)
-	//			lhs.matrix[i * result.col + j] +=
-	//			//result.matrix[i * result.col + j] +
-	//			(result.matrix[i * result.col + k] * rhs.matrix[k * rhs.col + j]);
-	//	}
-	//}
-	//
-	////std::cout << result << std::endl;
-	//return lhs;
-	lhs *= rhs;
-	return lhs;
-}
+				}
+			}
+		}
+		
+		return *this;
+	}
+
+
+	Matrix operator*(Matrix lhs, const Matrix & rhs)
+	{
+		lhs *= rhs;
+		std::cout << lhs << std::endl;
+		return lhs;
+	}
 
 Matrix operator*(Matrix lhs, const double factor)
 {
@@ -136,6 +136,11 @@ Matrix operator*(Matrix lhs, const double factor)
 	return lhs;
 }
 
+Matrix operator*(const double factor, Matrix lhs) 
+{
+	lhs = operator*(lhs, factor);
+	return lhs;
+}
 
 void swap(Matrix & rhs, Matrix & lhs)
 {
@@ -154,7 +159,7 @@ std::ostream& operator<<(std::ostream & out, Matrix & obj)
 {
 	for (int i = 0; i < obj.row; ++i) {
 		for (int j = 0; j < obj.col; ++j) {
-			out << obj.matrix[i * obj.col + j] << "\t";
+			out << std::setprecision(3) << obj.matrix[i * obj.col + j] << "\t";
 		}
 		out << std::endl;
 	}
@@ -172,5 +177,42 @@ void Matrix::setValue(int _row, int _col, double value)
 
 void Matrix::setValue(int index, double value)
 {
+	if (index >= row * col) {
+		throw SizeException{};
+	}
 	matrix[index] = value;
+}
+
+
+
+Matrix Matrix::calculateImportance(std::vector<double> & sumOfCols)
+{
+	Matrix s(*this);
+
+	for (int i = 0; i < row; ++i) {
+		for (int j = 0; j < col; ++j) {
+			if (sumOfCols[j] != 0) {
+				s.matrix[i * col + j] /= sumOfCols[j];
+			}
+			else {
+				s.matrix[i * col + j] = 1.0 / s.row;
+			}
+				
+			
+		}
+	}
+
+	return s;
+}
+
+
+Matrix Matrix::getQMatrix()
+{
+	Matrix s(*this);
+	s.clear();
+	for (int i = 0; i < row * col; ++i) {
+		s.matrix[i] = 1.0 / row;
+	}
+
+	return s;
 }
