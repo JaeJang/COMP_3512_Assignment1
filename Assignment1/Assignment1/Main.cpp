@@ -5,19 +5,22 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <stack>
+
 using namespace std;
 
 Matrix * readFile(Matrix *, vector<double>*);
-void getResult( Matrix & rank, const Matrix & M);
+void MarkovProcess( Matrix & rank, const Matrix & M);
 
 int main() {
 	constexpr double P = 0.85;
 
+	
 	Matrix *inputMatrix = nullptr;
 	vector<double> sumOfCols;
-	
+	inputMatrix = readFile(inputMatrix, &sumOfCols);
+
 	Matrix S = inputMatrix->calculateImportance(sumOfCols);
+
 	Matrix Q = inputMatrix->getQMatrix();
 
 	Matrix M = P * S + (1 - P) * Q;
@@ -29,18 +32,11 @@ int main() {
 		}
 	}
 	
-		
-	rank = M * rank;
-	getResult(rank, M);
-	double sum = 0;
-	for (int i = 0; i < rank.getRow() * rank.getCol(); ++i) {
-		sum += rank.getValue(i);
-	}
-	rank /= sum;
+	MarkovProcess(rank, M);
 
 	cout << "PageRank:" << endl << rank << endl;
 
-	
+	//Save the data in a text file
 	ofstream out("PageRank.txt");
 	out << rank;
 	out.close();
@@ -52,8 +48,14 @@ int main() {
 	return 0;
 }
 
+//Reads file and stores the data in Matrix object
+//Calculates the sum of each column
+//PRE	: NULL
+//POST	: matrix is allocated dynamically
+//	      sum of each column is calcaulated
+//RETURN: fully assigned matrix
 Matrix * readFile(Matrix * matrix, vector<double> * sumOfCols) {
-	ifstream in("example.txt");
+	ifstream in("connectivity.txt");
 
 	string temp;
 	double element, sum = 0;
@@ -74,6 +76,7 @@ Matrix * readFile(Matrix * matrix, vector<double> * sumOfCols) {
 				++i;
 			}
 			
+			//j is now the number of columns
 			j = i;
 			firstLineDone = true;
 		}
@@ -90,11 +93,20 @@ Matrix * readFile(Matrix * matrix, vector<double> * sumOfCols) {
 	return matrix;
 }
 
-void getResult( Matrix & rank, const Matrix & M) 
+//Markov Process
+//PRE	: rank matrix is initialized and m matrix is calculated
+//POST	: Markov Process is done
+void MarkovProcess( Matrix & rank, const Matrix & M)
 {
 	Matrix preRank(rank.getRow(), rank.getCol());
 	while (preRank != rank) {
 		preRank = rank;
 		rank = M * rank;
 	}
+
+	double sum = 0;
+	for (int i = 0; i < rank.getRow() * rank.getCol(); ++i) {
+		sum += rank.getValue(i);
+	}
+	rank /= sum;
 }

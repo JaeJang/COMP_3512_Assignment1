@@ -19,7 +19,6 @@ public:
 	
 	friend Matrix operator+(Matrix lhs, const Matrix & rhs);
 	friend Matrix operator-(Matrix lhs, const Matrix & rhs);
-	//friend Matrix operator/(Matrix lhs, const Matrix & rhs);
 	Matrix & operator/=(const double factor);
 	friend Matrix operator/(Matrix lhs, const double factor);
 	friend Matrix operator*(Matrix lhs, const Matrix & rhs);
@@ -31,7 +30,6 @@ public:
 	Matrix & operator=(Matrix rhs);
 	Matrix & operator*=(const Matrix & rhs);
 	friend std::ostream& operator<<(std::ostream & out, Matrix & obj);
-	friend std::istream& operator>>(std::istream & in, Matrix & obj);
 
 	int getRow() const { return row; }
 	int getCol() const { return col; }
