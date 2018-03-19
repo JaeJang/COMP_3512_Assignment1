@@ -40,6 +40,7 @@ int main() {
 	ofstream out("PageRank.txt");
 	out << rank;
 	out.close();
+	cout << "File written successed" << endl;
 
 	cout << "Press any button to exit";
 	_getche();

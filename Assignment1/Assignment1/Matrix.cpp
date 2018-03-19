@@ -234,8 +234,9 @@ std::ostream& operator<<(std::ostream & out, Matrix & obj)
 {
 	out << std::fixed << std::setprecision(3);
 	for (int i = 0; i < obj.row; ++i) {
+		char name = i + 65;
 		for (int j = 0; j < obj.col; ++j) {
-			out  << obj.matrix[i * obj.col + j] << "\t";
+			out  << name << " = " << obj.matrix[i * obj.col + j] << "\t";
 		}
 		out << std::endl;
 	}
