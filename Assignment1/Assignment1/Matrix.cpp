@@ -232,9 +232,10 @@ Matrix & Matrix::operator=(Matrix rhs)
 //RETURN : ostream
 std::ostream& operator<<(std::ostream & out, Matrix & obj) 
 {
+	out << std::fixed << std::setprecision(3);
 	for (int i = 0; i < obj.row; ++i) {
 		for (int j = 0; j < obj.col; ++j) {
-			out << std::setprecision(3) << obj.matrix[i * obj.col + j] << "\t";
+			out  << obj.matrix[i * obj.col + j] << "\t";
 		}
 		out << std::endl;
 	}
