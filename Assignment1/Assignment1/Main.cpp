@@ -31,16 +31,18 @@ int main() {
 			rank.setValue(i, j, 1);
 		}
 	}
-	
+
 	MarkovProcess(rank, M);
 
 	cout << "PageRank:" << endl << rank << endl;
 
 	//Save the data in a text file
-	ofstream out("PageRank.txt");
-	out << rank;
+	ofstream out("Rank.txt");
+	if (out << rank) {
+		cout << "File written successed" << endl;
+
+	}
 	out.close();
-	cout << "File written successed" << endl;
 
 	cout << "Press any button to exit";
 	_getche();
@@ -56,7 +58,11 @@ int main() {
 //	      sum of each column is calcaulated
 //RETURN: fully assigned matrix
 Matrix * readFile(Matrix * matrix, vector<double> * sumOfCols) {
-	ifstream in("connectivity.txt");
+	string filename;
+	cout << "Enter your file name: ";
+	cin >> filename;
+
+	ifstream in(filename);
 
 	string temp;
 	double element, sum = 0;
